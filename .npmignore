@@ -64,3 +64,4 @@ typings/
 .flowconfig
 .travis.yml
 src/
+.babelrc

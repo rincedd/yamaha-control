@@ -28,13 +28,5 @@
   },
   "engines": {
     "node": ">=7.6.0"
-  },
-  "babel": {
-    "presets": [
-      "flow"
-    ],
-    "plugins": [
-      "transform-es2015-modules-commonjs"
-    ]
   }
 }
