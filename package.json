@@ -2,7 +2,7 @@
   "name": "yamaha-control",
   "version": "0.1.0",
   "description": "Yamaha Extended Control for NodeJS",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "Gerd Zschaler <gzschaler@googlemail.com>",
   "license": "MIT",
   "devDependencies": {
