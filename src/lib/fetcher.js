@@ -1,5 +1,4 @@
 // @flow
-import fetch from 'node-fetch';
 
 /* eslint-disable quote-props */
 const RESPONSE_CODES = {
@@ -30,19 +29,28 @@ function getErrorMessage(responseCode: number | string): string {
   return RESPONSE_CODES[responseCode] || 'Unknown Error';
 }
 
-export default function sendRequest(url: string, params: ?Object = null): Promise<Object> {
-  const opts: Object = { method: 'GET' };
-  if (params) {
-    opts.method = 'POST';
-    opts.body = JSON.stringify(params);
-  }
-  return fetch(url, opts)
-    .then((response: Response) => response.json())
-    .then((result: Object) => {
-      if (result.response_code !== 0) {
-        throw new Error(getErrorMessage(result.response_code), result.response_code);
-      }
-      return result;
-    });
-}
+export type FetchFunction = (string, ?Object) => Promise<Response>;
 
+export default class Fetcher {
+  fetch: FetchFunction;
+
+  constructor(fetch: FetchFunction) {
+    this.fetch = fetch;
+  }
+
+  sendRequest(url: string, params: ?Object = null): Promise<Object> {
+    const opts: Object = { method: 'GET' };
+    if (params) {
+      opts.method = 'POST';
+      opts.body = JSON.stringify(params);
+    }
+    return this.fetch(url, opts)
+      .then((response: Response) => response.json())
+      .then((result: Object) => {
+        if (result.response_code !== 0) {
+          throw new Error(getErrorMessage(result.response_code), result.response_code);
+        }
+        return result;
+      });
+  }
+}

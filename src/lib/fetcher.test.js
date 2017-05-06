@@ -1,36 +1,38 @@
+import Response from './__mocks__/response';
 // @flow
-import fetch from 'node-fetch';
-import sendRequest from './request';
-
-jest.mock('node-fetch');
+import Fetcher from './fetcher';
 
 describe('sendRequest', () => {
-  afterEach(() => {
-    fetch.mockClear();
+  let fetcher: Fetcher;
+  let fetch;
+
+  beforeEach(() => {
+    fetch = jest.fn().mockReturnValue(Promise.resolve(new Response({ response_code: 0 })));
+    fetcher = new Fetcher(fetch);
   });
 
   it('makes a GET request by default', async () => {
-    await sendRequest('/my/path');
+    await fetcher.sendRequest('/my/path');
     expect(fetch).toHaveBeenCalledWith('/my/path', { method: 'GET' });
   });
 
   it('makes a POST request when params are supplied', async () => {
-    await sendRequest('/my/path', { foo: 'bar' });
+    await fetcher.sendRequest('/my/path', { foo: 'bar' });
     expect(fetch).toHaveBeenCalledWith('/my/path', { method: 'POST', body: '{"foo":"bar"}' });
   });
 
   it('parses the response JSON', async () => {
     const json = { response_code: 0, a: 'value', b: ['a', 'b', 'c'] };
-    fetch.setMockResponseData(json);
-    const response = await sendRequest('/my/path');
+    fetch.mockReturnValue(Promise.resolve(new Response(json)));
+    const response = await fetcher.sendRequest('/my/path');
     expect(response).toEqual(json);
   });
 
   it('rejects when the response_code field is not 0', async () => {
     expect.assertions(1);
-    fetch.setMockResponseData({ response_code: 3 });
+    fetch.mockReturnValue(Promise.resolve(new Response({ response_code: 3 })));
     try {
-      await sendRequest('/my/path');
+      await fetcher.sendRequest('/my/path');
     } catch (e) {
       expect(e.message).toEqual('Invalid Request');
     }
@@ -38,9 +40,9 @@ describe('sendRequest', () => {
 
   it('rejects with Unknown Error when the response code is not known', async () => {
     expect.assertions(1);
-    fetch.setMockResponseData({ response_code: 4001 });
+    fetch.mockReturnValue(Promise.resolve(new Response({ response_code: 4001 })));
     try {
-      await sendRequest('/my/path');
+      await fetcher.sendRequest('/my/path');
     } catch (e) {
       expect(e.message).toEqual('Unknown Error');
     }
@@ -50,7 +52,7 @@ describe('sendRequest', () => {
     expect.assertions(1);
     fetch.mockImplementation(() => Promise.reject(new Error('error')));
     try {
-      await sendRequest('/my/path');
+      await fetcher.sendRequest('/my/path');
     } catch (e) {
       expect(e.message).toEqual('error');
     }

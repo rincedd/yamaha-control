@@ -1,11 +1,14 @@
-import discoverYamahaDevice from './discovery';
 // @flow
-import sendRequest from './request';
+import discoverYamahaDevice from './discover';
+import type { FetchFunction } from './fetcher';
+import Fetcher from './fetcher';
 
 export default class Api {
   baseUrl: string;
+  fetcher: Fetcher;
 
-  constructor(ip: ?string) {
+  constructor(fetch: FetchFunction, ip: ?string) {
+    this.fetcher = new Fetcher(fetch);
     if (ip) {
       this.setIp(ip);
     }
@@ -17,7 +20,7 @@ export default class Api {
 
   async getBaseUrl(): Promise<string> {
     if (!this.baseUrl) {
-      this.setIp(await discoverYamahaDevice());
+      this.setIp(await discoverYamahaDevice(this.fetcher));
     }
     return Promise.resolve(this.baseUrl);
   }
@@ -25,6 +28,6 @@ export default class Api {
   async get(path: string): Promise<Object> {
     const url = `${await this.getBaseUrl()}/${path}`;
 
-    return sendRequest(url);
+    return this.fetcher.sendRequest(url);
   }
 }
