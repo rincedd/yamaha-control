@@ -1,8 +1,8 @@
-const sendRequest = require('./request');
+// @flow
+import fetch from 'node-fetch';
+import sendRequest from './request';
 
 jest.mock('node-fetch');
-
-const fetch = require('node-fetch');
 
 describe('sendRequest', () => {
   afterEach(() => {
@@ -21,14 +21,14 @@ describe('sendRequest', () => {
 
   it('parses the response JSON', async () => {
     const json = { response_code: 0, a: 'value', b: ['a', 'b', 'c'] };
-    fetch.setMockResponseJSON(json);
+    fetch.setMockResponseData(json);
     const response = await sendRequest('/my/path');
     expect(response).toEqual(json);
   });
 
   it('rejects when the response_code field is not 0', async () => {
     expect.assertions(1);
-    fetch.setMockResponseJSON({ response_code: 3 });
+    fetch.setMockResponseData({ response_code: 3 });
     try {
       await sendRequest('/my/path');
     } catch (e) {
@@ -38,7 +38,7 @@ describe('sendRequest', () => {
 
   it('rejects with Unknown Error when the response code is not known', async () => {
     expect.assertions(1);
-    fetch.setMockResponseJSON({ response_code: 4001 });
+    fetch.setMockResponseData({ response_code: 4001 });
     try {
       await sendRequest('/my/path');
     } catch (e) {
