@@ -1,32 +1,12 @@
 // @flow
 import Api from './api';
-
-export type ToneControlStatus = {
-  mode: string,
-  bass: number,
-  treble: number
-};
-
-export type ZoneStatus = {
-  response_code: number,
-  power: 'on' | 'standby',
-  sleep: 0 | 30 | 60 | 90 | 120,
-  volume: number,
-  mute: boolean,
-  input: string,
-  sound_program: string,
-  surround_3d: boolean,
-  direct: boolean,
-  pure_direct: boolean,
-  enhancer: boolean,
-  tone_control: ToneControlStatus
-};
+import type { ZoneID, ZoneStatus } from './types';
 
 export default class Zone {
   api: Api;
   name: string;
 
-  constructor(api: Api, name: string = 'main') {
+  constructor(api: Api, name: ZoneID = 'main') {
     this.api = api;
     this.name = name;
   }
@@ -35,7 +15,7 @@ export default class Zone {
     return this.api.get(`${this.name}/getStatus`);
   }
 
-  async getSoundProgramList(): Promise<Array<string>> {
+  async getSoundProgramList(): Promise<string[]> {
     const response: Object = await this.api.get(`${this.name}/getSoundProgramList`);
     return response.sound_program_list || [];
   }

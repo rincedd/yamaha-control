@@ -1,3 +1,4 @@
+// @flow
 import Controller from './lib/controller';
 
 export {
