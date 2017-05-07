@@ -19,7 +19,7 @@ export default class NetUsb {
       artist: playbackInfo.artist,
       album: playbackInfo.album,
       track: playbackInfo.track,
-      albumArt: `http://${this.api.ip}/${playbackInfo.albumart_url}`,
+      albumArt: `http://${this.api.ip}${playbackInfo.albumart_url}`,
     };
   }
 
