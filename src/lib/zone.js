@@ -1,13 +1,25 @@
 // @flow
 import Api from './api';
 
-type ZoneStatus = {
+export type ToneControlStatus = {
+  mode: string,
+  bass: number,
+  treble: number
+};
+
+export type ZoneStatus = {
   response_code: number,
   power: 'on' | 'standby',
-  sleep: number,
+  sleep: 0 | 30 | 60 | 90 | 120,
   volume: number,
   mute: boolean,
-  sound_program: string
+  input: string,
+  sound_program: string,
+  surround_3d: boolean,
+  direct: boolean,
+  pure_direct: boolean,
+  enhancer: boolean,
+  tone_control: ToneControlStatus
 };
 
 export default class Zone {
@@ -23,8 +35,9 @@ export default class Zone {
     return this.api.get(`${this.name}/getStatus`);
   }
 
-  getSoundProgramList(): Promise<Object> {
-    return this.api.get(`${this.name}/getSoundProgramList`);
+  async getSoundProgramList(): Promise<Array<string>> {
+    const response: Object = await this.api.get(`${this.name}/getSoundProgramList`);
+    return response.sound_program_list || [];
   }
 
   async isOn(): Promise<boolean> {
@@ -50,5 +63,9 @@ export default class Zone {
 
   volumeDown(): Promise<Object> {
     return this.api.get(`${this.name}/setVolume?volume=down`);
+  }
+
+  setMute(mute: boolean = true): Promise<Object> {
+    return this.api.get(`${this.name}/setMute?enable=${mute.toString()}`);
   }
 }

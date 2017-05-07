@@ -1,5 +1,5 @@
-import Response from './__mocks__/response';
 // @flow
+import Response from './__mocks__/response';
 import Fetcher from './fetcher';
 
 describe('sendRequest', () => {
