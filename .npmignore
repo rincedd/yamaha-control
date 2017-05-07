@@ -63,5 +63,4 @@ typings/
 /flow-typed
 .flowconfig
 .travis.yml
-src/
 .babelrc
