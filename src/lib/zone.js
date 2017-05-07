@@ -1,6 +1,6 @@
 // @flow
 import Api from './api';
-import type { ZoneID, ZoneStatus } from './types';
+import type { SimpleResponse, ZoneID, ZoneStatus } from './types';
 
 export default class Zone {
   api: Api;
@@ -25,27 +25,27 @@ export default class Zone {
     return status.power === 'on';
   }
 
-  powerOn(): Promise<Object> {
+  powerOn(): Promise<SimpleResponse> {
     return this.api.get(`${this.name}/setPower?power=on`);
   }
 
-  powerOff(): Promise<Object> {
+  powerOff(): Promise<SimpleResponse> {
     return this.api.get(`${this.name}/setPower?power=standby`);
   }
 
-  togglePower(): Promise<Object> {
+  togglePower(): Promise<SimpleResponse> {
     return this.api.get(`${this.name}/setPower?power=toggle`);
   }
 
-  volumeUp(): Promise<Object> {
+  volumeUp(): Promise<SimpleResponse> {
     return this.api.get(`${this.name}/setVolume?volume=up`);
   }
 
-  volumeDown(): Promise<Object> {
+  volumeDown(): Promise<SimpleResponse> {
     return this.api.get(`${this.name}/setVolume?volume=down`);
   }
 
-  setMute(mute: boolean = true): Promise<Object> {
+  setMute(mute: boolean = true): Promise<SimpleResponse> {
     return this.api.get(`${this.name}/setMute?enable=${mute.toString()}`);
   }
 }

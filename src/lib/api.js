@@ -6,6 +6,7 @@ import Fetcher from './fetcher';
 export default class Api {
   baseUrl: string;
   fetcher: Fetcher;
+  ip: string;
 
   constructor(fetch: FetchFunction, ip: ?string) {
     this.fetcher = new Fetcher(fetch);
@@ -15,14 +16,14 @@ export default class Api {
   }
 
   setIp(ip: string) {
-    this.baseUrl = `http://${ip}/YamahaExtendedControl/v1`;
+    this.ip = ip;
   }
 
   async getBaseUrl(): Promise<string> {
-    if (!this.baseUrl) {
+    if (!this.ip) {
       this.setIp(await discoverYamahaDevice(this.fetcher));
     }
-    return Promise.resolve(this.baseUrl);
+    return Promise.resolve(`http://${this.ip}/YamahaExtendedControl/v1`);
   }
 
   async get(path: string): Promise<Object> {

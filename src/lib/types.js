@@ -14,6 +14,10 @@ export type SoundProgramID = 'munich_a' | 'munich_b' | 'munich' | 'frankfurt' | 
   | '2ch_stereo' | '5ch_stereo' | '7ch_stereo' | '9ch_stereo' | '11ch_stereo' | 'stereo' | 'surr_decoder'
   | 'my_surround' | 'target' | 'straight' | 'off';
 
+export type SimpleResponse = {
+  response_code: number
+};
+
 export type DeviceInfo = {
   response_code: number,
   model_name: string,
@@ -78,4 +82,34 @@ export type ZoneStatus = {
   pure_direct: boolean,
   enhancer: boolean,
   tone_control: ToneControlStatus
+};
+
+export type PlaybackStatus = 'play' | 'stop' | 'pause' | 'fast_reverse' | 'fast_forward';
+export type ExtendedPlaybackStatus = 'play' | 'stop' | 'pause' | 'play_pause' | 'previous' | 'next'
+  | 'fast_reverse_start' | 'fast_reverse_end' | 'fast_forward_start' | 'fast_forward_end';
+
+export type PlaybackInfo = {
+  response_code: number,
+  input: InputID,
+  play_queue_type: string,
+  playback: PlaybackStatus,
+  repeat: 'off' | 'one' | 'all',
+  shuffle: 'off' | 'on' | 'songs' | 'albums',
+  play_time: number,
+  total_time: number,
+  artist: string,
+  album: string,
+  track: string,
+  albumart_url: string,
+  albumart_id: number,
+  usb_devicetype: 'msc' | 'ipod' | 'unknown',
+  auto_stopped: boolean,
+  attribute: number
+};
+
+export type SimplePlaybackInfo = {
+  artist: string,
+  album: string,
+  track: string,
+  albumArt: string,
 };
