@@ -1,6 +1,5 @@
 // @flow
 import Api from './api';
-import type { FetchFunction } from './fetcher';
 import NetUsb from './netusb';
 import SystemApi from './system';
 import Zone from './zone';
@@ -11,8 +10,8 @@ export default class Controller {
   system: SystemApi;
   netusb: NetUsb;
 
-  constructor(fetch: FetchFunction, ip: ?string) {
-    this.api = new Api(fetch, ip);
+  constructor(ip: ?string) {
+    this.api = new Api(ip);
     this.system = new SystemApi(this.api);
     this.mainZone = new Zone(this.api, 'main');
     this.netusb = new NetUsb(this.api);

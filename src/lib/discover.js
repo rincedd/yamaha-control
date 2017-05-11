@@ -1,11 +1,11 @@
 // @flow
+/* global fetch */
 import ssdp from 'peer-ssdp';
-import Fetcher from './fetcher';
 
 const manufacturer = /<manufacturer>Yamaha Corporation<\/manufacturer>/i;
 const yamahaTag = /<yamaha:X_device>/i;
 
-function discoverYamahaDevice(fetcher: Fetcher, timeout: number = 5000) {
+function discoverYamahaDevice(timeout: number = 5000) {
   return new Promise((resolve, reject) => {
     const peer = ssdp.createPeer();
     const timer = setTimeout(() => {
@@ -20,7 +20,7 @@ function discoverYamahaDevice(fetcher: Fetcher, timeout: number = 5000) {
     });
     peer.on('found', async (headers, address) => {
       if (headers.LOCATION) {
-        const response = await fetcher.fetch(headers.LOCATION);
+        const response = await fetch(headers.LOCATION);
         if (response.status === 200) {
           const deviceDescription = await response.text();
           if (manufacturer.test(deviceDescription) && yamahaTag.test(deviceDescription)) {

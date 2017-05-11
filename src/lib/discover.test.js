@@ -14,15 +14,18 @@ const failsafe = p => p.catch(() => {
 
 describe('discoverYamahaDevice', () => {
   let fetcherResponseData;
-  const fetcher: Object = {};
 
   beforeEach(() => {
     fetcherResponseData = {};
-    fetcher.fetch = jest.fn(() => Promise.resolve(new Response(fetcherResponseData)));
+    global.fetch = jest.fn(() => Promise.resolve(new Response(fetcherResponseData)));
+  });
+
+  afterEach(() => {
+    delete global.fetch;
   });
 
   it('starts an SSDP search for MediaRenderer devices', () => {
-    failsafe(discoverYamahaDevice(fetcher, SHORT_TIMEOUT));
+    failsafe(discoverYamahaDevice(SHORT_TIMEOUT));
     expect(getInstance().start).toHaveBeenCalled();
     getInstance().emit('ready');
     expect(getInstance().search).toHaveBeenCalledWith({ ST: 'urn:schemas-upnp-org:device:MediaRenderer:1' });
@@ -30,21 +33,21 @@ describe('discoverYamahaDevice', () => {
 
   it('rejects if it cannot find a device within the provided timeout', () => {
     expect.assertions(1);
-    return discoverYamahaDevice(fetcher, SHORT_TIMEOUT)
+    return discoverYamahaDevice(SHORT_TIMEOUT)
       .catch(e => expect(e.message).toEqual('No Yamaha device found in network.'));
   });
 
   it('fetches the device description when a device is found', () => {
     fetcherResponseData = 'some-other-device';
-    failsafe(discoverYamahaDevice(fetcher));
+    failsafe(discoverYamahaDevice());
     getInstance().emit('found', { LOCATION: 'an-url' }, { address: 'an-address' });
-    expect(fetcher.fetch).toHaveBeenCalledWith('an-url');
+    expect(global.fetch).toHaveBeenCalledWith('an-url');
   });
 
   it('resolves with the device address if the device is a Yamaha device', () => {
     expect.assertions(1);
     fetcherResponseData = fs.readFileSync(path.join(__dirname, '__mocks__/device.xml'));
-    const p = discoverYamahaDevice(fetcher);
+    const p = discoverYamahaDevice();
     getInstance().emit('found', { LOCATION: 'an-url' }, { address: 'an-address' });
     return p.then(address => expect(address).toEqual('an-address'));
   });
