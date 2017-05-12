@@ -11,14 +11,14 @@ describe('sendRequest', () => {
     delete global.fetch;
   });
 
-  it('makes a GET request by default', async () => {
+  it('makes a GET request', async () => {
     await sendRequest('/my/path');
-    expect(global.fetch).toHaveBeenCalledWith('/my/path', { method: 'GET' });
+    expect(global.fetch).toHaveBeenCalledWith('/my/path', { method: 'GET', headers: {} });
   });
 
-  it('makes a POST request when params are supplied', async () => {
-    await sendRequest('/my/path', { foo: 'bar' });
-    expect(global.fetch).toHaveBeenCalledWith('/my/path', { method: 'POST', body: '{"foo":"bar"}' });
+  it('adds request headers when supplied', async () => {
+    await sendRequest('/my/path', { some: 'header' });
+    expect(global.fetch).toHaveBeenCalledWith('/my/path', { method: 'GET', headers: { some: 'header' } });
   });
 
   it('parses the response JSON', async () => {

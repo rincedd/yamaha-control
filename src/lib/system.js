@@ -1,6 +1,8 @@
 // @flow
+import EventEmitter from 'events';
 import Api from './api';
-import type { DeviceInfo, FeatureInfo, InputID, SoundProgramID, ZoneID } from './types';
+import NotificationDispatcher from './notification-dispatcher';
+import type { DeviceInfo, FeatureInfo, InputID, SoundProgramID, SystemChangeInfo, ZoneID } from './types';
 
 export type IdToNameMaps = {
   zones: { [ZoneID]: string },
@@ -16,11 +18,26 @@ function listToMap<U: string>(list: Array<{ id: U, text: string }>): { [U]: stri
   return o;
 }
 
-export default class SystemApi {
+export default class SystemApi extends EventEmitter {
   api: Api;
 
-  constructor(api: Api) {
+  constructor(api: Api, dispatcher: NotificationDispatcher) {
+    super();
     this.api = api;
+    dispatcher.on('change:system', (event: SystemChangeInfo) => {
+      if (event.func_status_updated) {
+        this.emit('funcchange');
+      }
+      if (event.bluetooth_info_updated) {
+        this.emit('bluetoothchange');
+      }
+      if (event.name_text_updated) {
+        this.emit('namechange');
+      }
+      if (event.location_info_updated) {
+        this.emit('locationchange');
+      }
+    });
   }
 
   getDeviceInfo(): Promise<DeviceInfo> {

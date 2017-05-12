@@ -30,12 +30,12 @@ function getErrorMessage(responseCode: number | string): string {
   return RESPONSE_CODES[responseCode] || 'Unknown Error';
 }
 
-export default function sendRequest(url: string, params: ?Object = null): Promise<Object> {
+function sendRequest(url: string, headers: { [string]: string } = {}): Promise<Object> {
   const opts: Object = { method: 'GET' };
-  if (params) {
-    opts.method = 'POST';
-    opts.body = JSON.stringify(params);
+  if (headers) {
+    opts.headers = headers;
   }
+
   return fetch(url, opts)
     .then((response: Response) => response.json())
     .then((result: Object) => {
@@ -45,3 +45,5 @@ export default function sendRequest(url: string, params: ?Object = null): Promis
       return result;
     });
 }
+
+export default sendRequest;

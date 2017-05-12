@@ -14,6 +14,8 @@ export type SoundProgramID = 'munich_a' | 'munich_b' | 'munich' | 'frankfurt' | 
   | '2ch_stereo' | '5ch_stereo' | '7ch_stereo' | '9ch_stereo' | '11ch_stereo' | 'stereo' | 'surr_decoder'
   | 'my_surround' | 'target' | 'straight' | 'off';
 
+export type PowerStatus = 'on' | 'standby';
+
 export type SimpleResponse = {
   response_code: number
 };
@@ -45,7 +47,7 @@ export type ZoneInfo = {
   id: ZoneID,
   zone_b: boolean,
   func_list: string[],
-  input_list: string[],
+  input_list: InputID[],
   sound_program_list: string[],
   tone_control_mode_list: string[],
   equalizer_mode_list: string[],
@@ -71,11 +73,11 @@ export type ToneControlStatus = {
 
 export type ZoneStatus = {
   response_code: number,
-  power: 'on' | 'standby',
+  power: PowerStatus,
   sleep: 0 | 30 | 60 | 90 | 120,
   volume: number,
   mute: boolean,
-  input: string,
+  input: InputID,
   sound_program: string,
   surround_3d: boolean,
   direct: boolean,
@@ -112,4 +114,55 @@ export type SimplePlaybackInfo = {
   album: string,
   track: string,
   albumArt: string,
+};
+
+export type ZoneChangeInfo = {
+  power?: PowerStatus,
+  input?: InputID,
+  volume?: number,
+  mute?: boolean,
+  status_updated?: boolean,
+  signal_info_updated?: boolean
+};
+export type SystemChangeInfo = {
+  bluetooth_info_updated?: boolean,
+  func_status_updated?: boolean,
+  speaker_settings_updated?: boolean,
+  name_text_updated?: boolean,
+  tag_updated?: boolean,
+  location_info_updated?: boolean,
+  stereo_pair_info_updated?: boolean
+};
+export type NetUsbChangeInfo = {
+  play_error?: number,
+  multiple_play_errors?: number,
+  play_message?: string,
+  account_updated?: boolean,
+  play_time?: number,
+  preset_info_updated?: boolean,
+  recent_info_updated?: boolean,
+  preset_control?: {
+    type: string,
+    num: number,
+    result: string
+  },
+  trial_status?: {
+    input: InputID,
+    enable: boolean
+  },
+  trial_time_left?: {
+    input: InputID,
+    time: number
+  },
+  play_info_updated?: boolean,
+  list_info_updated?: boolean
+};
+export type StatusChangeEvent = {
+  device_id: ?string,
+  system?: SystemChangeInfo,
+  main?: ZoneChangeInfo,
+  zone2?: ZoneChangeInfo,
+  zone3?: ZoneChangeInfo,
+  zone4?: ZoneChangeInfo,
+  netusb?: NetUsbChangeInfo
 };
