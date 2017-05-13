@@ -17,7 +17,7 @@ export default class Controller {
     this.dispatcher = new NotificationDispatcher(udpPort);
     this.system = new SystemApi(this.api, this.dispatcher);
     this.mainZone = new Zone(this.api, this.dispatcher, 'main');
-    this.netusb = new NetUsb(this.api);
+    this.netusb = new NetUsb(this.api, this.dispatcher);
     this.api.setNotificationPort(udpPort);
     this.api.setRequestNotifications();
     this.dispatcher.start();
