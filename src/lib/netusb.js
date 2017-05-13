@@ -1,12 +1,22 @@
 // @flow
+import EventEmitter from 'events';
 import Api from './api';
-import type { ExtendedPlaybackStatus, PlaybackInfo, SimplePlaybackInfo, SimpleResponse } from './types';
+import NotificationDispatcher from './notification-dispatcher';
+import type {
+  ExtendedPlaybackStatus, NetUsbChangeInfo, PlaybackInfo, SimplePlaybackInfo, SimpleResponse
+} from './types';
 
-export default class NetUsb {
+export default class NetUsb extends EventEmitter {
   api: Api;
 
-  constructor(api: Api) {
+  constructor(api: Api, dispatcher: NotificationDispatcher) {
+    super();
     this.api = api;
+    dispatcher.on('change:netusb', (event: NetUsbChangeInfo) => {
+      if (event.play_info_updated) {
+        this.getCurrentlyPlaying().then((playbackInfo: SimplePlaybackInfo) => this.emit('change:currentlyplaying', playbackInfo));
+      }
+    });
   }
 
   getPlaybackInfo(): Promise<PlaybackInfo> {

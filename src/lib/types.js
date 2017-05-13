@@ -48,7 +48,7 @@ export type ZoneInfo = {
   zone_b: boolean,
   func_list: string[],
   input_list: InputID[],
-  sound_program_list: string[],
+  sound_program_list: SoundProgramID[],
   tone_control_mode_list: string[],
   equalizer_mode_list: string[],
   link_control_list: string[],
@@ -166,3 +166,12 @@ export type StatusChangeEvent = {
   zone4?: ZoneChangeInfo,
   netusb?: NetUsbChangeInfo
 };
+
+export type SignalInfo = {
+  response_code: number,
+  audio: {
+    error: number,
+    format: string,
+    fs: string
+  }
+}

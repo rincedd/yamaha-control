@@ -2,40 +2,47 @@
 import EventEmitter from 'events';
 import Api from './api';
 import NotificationDispatcher from './notification-dispatcher';
-import type { SimpleResponse, ZoneChangeInfo, ZoneID, ZoneStatus } from './types';
+import type { SignalInfo, SimpleResponse, ZoneChangeInfo, ZoneID, ZoneStatus } from './types';
 
 export default class Zone extends EventEmitter {
   api: Api;
-  name: string;
+  name: ZoneID;
 
   constructor(api: Api, dispatcher: NotificationDispatcher, name: ZoneID = 'main') {
     super();
     this.api = api;
     this.name = name;
     dispatcher.on('change:zone', (zone: ZoneID, event: ZoneChangeInfo) => {
-      if (event.power) {
-        this.emit('powerchange', event.power);
+      if (zone !== this.name) {
+        return;
+      }
+      if ('power' in event) {
+        this.emit('change:power', event.power);
       }
       if ('mute' in event) {
-        this.emit('mutechange', event.mute);
+        this.emit('change:mute', event.mute);
       }
       if (event.input) {
-        this.emit('inputchange', event.input);
+        this.emit('change:input', event.input);
       }
       if ('volume' in event) {
-        this.emit('volumechange', event.volume);
+        this.emit('change:volume', event.volume);
       }
       if (event.status_updated) {
-        this.getStatus().then(status => this.emit('statuschange', status));
+        this.getStatus().then(status => this.emit('change:status', status));
       }
       if (event.signal_info_updated) {
-        this.emit('signalchange');
+        this.getSignalInfo().then(signalInfo => this.emit('change:signal', signalInfo));
       }
     });
   }
 
   getStatus(): Promise<ZoneStatus> {
     return this.api.get(`${this.name}/getStatus`);
+  }
+
+  getSignalInfo(): Promise<SignalInfo> {
+    return this.api.get(`${this.name}/getSignalInfo`);
   }
 
   async getSoundProgramList(): Promise<string[]> {

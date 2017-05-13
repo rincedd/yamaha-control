@@ -40,7 +40,7 @@ export default class Api {
     return sendRequest(url, this.getRequestHeaders());
   }
 
-  getRequestHeaders(): ?{ [string]: string } {
+  getRequestHeaders(): { [string]: string } {
     if (this.requestNotifications) {
       return {
         'X-AppName': 'MusicCast/1.0',
