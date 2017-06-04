@@ -175,3 +175,22 @@ export type SignalInfo = {
     fs: string
   }
 }
+
+export type ListItemInfo = {
+  text: string,
+  thumbnail: string,
+  attribute: number
+};
+
+export type ListInfo = {
+  response_code: number,
+  input: InputID,
+  menu_layer: number,
+  max_line: number,
+  index: number,
+  playing_index: number,
+  menu_name: string,
+  list_info: ListItemInfo[]
+};
+
+export type ListControlAction = 'select' | 'play' | 'return';

@@ -3,7 +3,8 @@ import EventEmitter from 'events';
 import Api from './api';
 import NotificationDispatcher from './notification-dispatcher';
 import type {
-  ExtendedPlaybackStatus, NetUsbChangeInfo, PlaybackInfo, SimplePlaybackInfo, SimpleResponse
+  ExtendedPlaybackStatus, InputID, ListControlAction, ListInfo, NetUsbChangeInfo, PlaybackInfo, SimplePlaybackInfo,
+  SimpleResponse,
 } from './types';
 
 export default class NetUsb extends EventEmitter {
@@ -51,5 +52,13 @@ export default class NetUsb extends EventEmitter {
 
   stop(): Promise<SimpleResponse> {
     return this.setPlayback('stop');
+  }
+
+  getListInfo(input: InputID, index: number): Promise<ListInfo> {
+    return this.api.get(`netusb/getListInfo?input=${input}&index=${index}&size=8&lang=en`);
+  }
+
+  setListControl(input: InputID, type: ListControlAction, index: number): Promise<SimpleResponse> {
+    return this.api.get(`netusb/setListControl?input=${input}&type=${type}&index=${index}`);
   }
 }
