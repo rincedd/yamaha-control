@@ -13,12 +13,11 @@ export default class Controller {
   dispatcher: NotificationDispatcher;
 
   constructor(ip: ?string, udpPort: number = 41234) {
-    this.api = new Api(ip);
+    this.api = new Api(ip, udpPort);
     this.dispatcher = new NotificationDispatcher(udpPort);
     this.system = new SystemApi(this.api, this.dispatcher);
     this.mainZone = new Zone(this.api, this.dispatcher, 'main');
     this.netusb = new NetUsb(this.api, this.dispatcher);
-    this.api.setNotificationPort(udpPort);
     this.api.setRequestNotifications();
     this.dispatcher.start();
   }
