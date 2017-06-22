@@ -9,7 +9,8 @@ describe('The notification dispatcher', () => {
   let mockSocket;
 
   beforeEach(() => {
-    dispatcher = new NotificationDispatcher(12345);
+    dispatcher = new NotificationDispatcher();
+    dispatcher.setPort(12345);
     dispatcher.start();
     mockSocket = createSocket.lastInstance;
   });

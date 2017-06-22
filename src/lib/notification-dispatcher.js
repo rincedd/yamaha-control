@@ -8,8 +8,7 @@ type Socket = dgram$Socket;
 export default class NotificationDispatcher extends EventEmitter {
   port: number;
 
-  constructor(port: number) {
-    super();
+  setPort(port: number) {
     this.port = port;
   }
 
