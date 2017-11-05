@@ -25,7 +25,7 @@
   "scripts": {
     "build": "babel --ignore *.test.js,./**/__mocks__/*.js -d dist src/",
     "lint": "eslint ./src",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "test": "jest"
   },
   "engines": {
