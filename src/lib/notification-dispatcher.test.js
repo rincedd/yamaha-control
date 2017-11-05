@@ -18,7 +18,6 @@ describe('The notification dispatcher', () => {
   afterEach(() => {
     createSocket.mockClear();
     Object.keys(mockSocket).forEach((key) => {
-      // $FlowFixMe
       if (mockSocket[key] && jest.isMockFunction(mockSocket[key])) {
         mockSocket[key].mockClear();
       }
