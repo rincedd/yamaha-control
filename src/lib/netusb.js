@@ -3,8 +3,8 @@ import EventEmitter from 'events';
 import Api from './api';
 import NotificationDispatcher from './notification-dispatcher';
 import type {
-  ExtendedPlaybackStatus, InputID, ListControlAction, ListInfo, NetUsbChangeInfo, PlaybackInfo, SimplePlaybackInfo,
-  SimpleResponse,
+  ExtendedPlaybackStatus, InputID, ListControlAction, ListInfo, NetUsbChangeInfo, PlaybackInfo,
+  PresetInfo, PresetItemInfo, SimplePlaybackInfo, SimpleResponse, ZoneID,
 } from './types';
 
 export default class NetUsb extends EventEmitter {
@@ -60,5 +60,14 @@ export default class NetUsb extends EventEmitter {
 
   setListControl(input: InputID, type: ListControlAction, index: number): Promise<SimpleResponse> {
     return this.api.get(`netusb/setListControl?input=${input}&type=${type}&index=${index}`);
+  }
+
+  async getPresets(): Promise<PresetItemInfo[]> {
+    const presetInfo: PresetInfo = await this.api.get('netusb/getPresetInfo');
+    return presetInfo.preset_info.filter((preset: PresetItemInfo) => preset.input !== 'unknown');
+  }
+
+  selectPreset(zone: ZoneID, index: number): Promise<SimpleResponse> {
+    return this.api.get(`netusb/recallPreset?zone=${zone}&num=${index}`);
   }
 }

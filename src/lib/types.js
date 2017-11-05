@@ -1,20 +1,131 @@
 // @flow
 export type ZoneID = 'main' | 'zone2' | 'zone3' | 'zone4';
-export type InputID = 'cd' | 'tuner' | 'multi_ch' | 'phono' | 'hdmi1' | 'hdmi2' | 'hdmi3' | 'hdmi4' | 'hdmi5' | 'hdmi6'
-  | 'hdmi7' | 'hdmi8' | 'hdmi' | 'av1' | 'av2' | 'av3' | 'av4' | 'av5' | 'av6' | 'av7' | 'v_aux' | 'aux1' | 'aux2'
-  | 'aux' | 'audio1' | 'audio2' | 'audio3' | 'audio4' | 'audio_cd' | 'audio' | 'optical1' | 'optical2' | 'optical'
-  | 'coaxial1' | 'coaxial2' | 'coaxial' | 'digital1' | 'digital2' | 'digital' | 'line1' | 'line2' | 'line3' | 'line_cd'
-  | 'analog' | 'tv' | 'bd_dvd' | 'usb_dac' | 'usb' | 'bluetooth' | 'server' | 'net_radio' | 'rhapsody' | 'napster'
-  | 'pandora' | 'siriusxm' | 'spotify' | 'juke' | 'airplay' | 'radiko' | 'qobuz' | 'mc_link' | 'main_sync' | 'none';
-export type SoundProgramID = 'munich_a' | 'munich_b' | 'munich' | 'frankfurt' | 'stuttgart' | 'vienna' | 'amsterdam'
-  | 'usa_a' | 'usa_b' | 'tokyo' | 'freiburg' | 'royaumont' | 'chamber' | 'concert' | 'village_gate' | 'village_vanguard'
-  | 'warehouse_loft' | 'cellar_club' | 'jazz_club' | 'roxy_theatre' | 'bottom_line' | 'arena' | 'sports' | 'action_game'
-  | 'roleplaying_game' | 'game' | 'music_video' | 'music' | 'recital_opera' | 'pavilion' | 'disco' | 'standard'
-  | 'spectacle' | 'sci-fi' | 'adventure' | 'drama' | 'talk_show' | 'tv_program' | 'mono_movie' | 'movie' | 'enhanced'
-  | '2ch_stereo' | '5ch_stereo' | '7ch_stereo' | '9ch_stereo' | '11ch_stereo' | 'stereo' | 'surr_decoder'
-  | 'my_surround' | 'target' | 'straight' | 'off';
+export type InputID =
+  'cd'
+  | 'tuner'
+  | 'multi_ch'
+  | 'phono'
+  | 'hdmi1'
+  | 'hdmi2'
+  | 'hdmi3'
+  | 'hdmi4'
+  | 'hdmi5'
+  | 'hdmi6'
+  | 'hdmi7'
+  | 'hdmi8'
+  | 'hdmi'
+  | 'av1'
+  | 'av2'
+  | 'av3'
+  | 'av4'
+  | 'av5'
+  | 'av6'
+  | 'av7'
+  | 'v_aux'
+  | 'aux1'
+  | 'aux2'
+  | 'aux'
+  | 'audio1'
+  | 'audio2'
+  | 'audio3'
+  | 'audio4'
+  | 'audio_cd'
+  | 'audio'
+  | 'optical1'
+  | 'optical2'
+  | 'optical'
+  | 'coaxial1'
+  | 'coaxial2'
+  | 'coaxial'
+  | 'digital1'
+  | 'digital2'
+  | 'digital'
+  | 'line1'
+  | 'line2'
+  | 'line3'
+  | 'line_cd'
+  | 'analog'
+  | 'tv'
+  | 'bd_dvd'
+  | 'usb_dac'
+  | 'usb'
+  | 'bluetooth'
+  | 'server'
+  | 'net_radio'
+  | 'rhapsody'
+  | 'napster'
+  | 'pandora'
+  | 'siriusxm'
+  | 'spotify'
+  | 'juke'
+  | 'airplay'
+  | 'radiko'
+  | 'qobuz'
+  | 'mc_link'
+  | 'main_sync'
+  | 'none';
+export type SoundProgramID =
+  'munich_a'
+  | 'munich_b'
+  | 'munich'
+  | 'frankfurt'
+  | 'stuttgart'
+  | 'vienna'
+  | 'amsterdam'
+  | 'usa_a'
+  | 'usa_b'
+  | 'tokyo'
+  | 'freiburg'
+  | 'royaumont'
+  | 'chamber'
+  | 'concert'
+  | 'village_gate'
+  | 'village_vanguard'
+  | 'warehouse_loft'
+  | 'cellar_club'
+  | 'jazz_club'
+  | 'roxy_theatre'
+  | 'bottom_line'
+  | 'arena'
+  | 'sports'
+  | 'action_game'
+  | 'roleplaying_game'
+  | 'game'
+  | 'music_video'
+  | 'music'
+  | 'recital_opera'
+  | 'pavilion'
+  | 'disco'
+  | 'standard'
+  | 'spectacle'
+  | 'sci-fi'
+  | 'adventure'
+  | 'drama'
+  | 'talk_show'
+  | 'tv_program'
+  | 'mono_movie'
+  | 'movie'
+  | 'enhanced'
+  | '2ch_stereo'
+  | '5ch_stereo'
+  | '7ch_stereo'
+  | '9ch_stereo'
+  | '11ch_stereo'
+  | 'stereo'
+  | 'surr_decoder'
+  | 'my_surround'
+  | 'target'
+  | 'straight'
+  | 'off';
 
 export type PowerStatus = 'on' | 'standby';
+
+export type RangeStepInfo = {
+  id: string,
+  min: number,
+  max: number,
+  step: number
+};
 
 export type SimpleResponse = {
   response_code: number
@@ -33,15 +144,32 @@ export type DeviceInfo = {
   update_error_code?: string,
   update_progress?: Object
 };
+export type InputInfo = {
+  id: InputID,
+  distribution_enable: boolean,
+  rename_enable: boolean,
+  account_enable: boolean,
+  play_info_type: 'none' | 'tuner' | 'netusb' | 'cd'
 
-export type SystemInfo = {};
-export type TunerInfo = {};
-export type NetUsbInfo = {};
-export type RangeStepInfo = {
-  id: string,
-  min: number,
-  max: number,
-  step: number
+};
+export type SystemInfo = {
+  func_list: string[],
+  zone_num: number,
+  input_list: InputInfo[],
+  ymap_list: string[]
+};
+export type TunerInfo = {
+  func_list: string[],
+  range_step: RangeStepInfo[],
+  preset: { type: 'common' | 'separate', num: number }
+};
+export type NetUsbInfo = {
+  func_list: string[],
+  preset: { num: number },
+  recent_info: { num: number },
+  play_queue: { size: number },
+  mc_playlist: { size: number, num: number },
+  vtuner_fver: string
 };
 export type ZoneInfo = {
   id: ZoneID,
@@ -194,3 +322,15 @@ export type ListInfo = {
 };
 
 export type ListControlAction = 'select' | 'play' | 'return';
+
+export type PresetItemInfo = {
+  input: InputID | 'unknown',
+  text: string,
+  attribute: number
+}
+
+export type PresetInfo = {
+  response_code: number,
+  preset_info: PresetItemInfo[],
+  func_list: string[]
+}
